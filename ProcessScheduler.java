@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -14,10 +13,21 @@ public class ProcessScheduler {
         ProcessScheduler ps = new ProcessScheduler();
         ps.ReadFile("in.txt");
         System.out.println(ps.queue.toString());
+        ps.FCFS();
     }
-
+    
 
     public void FCFS(){
+        int counter= 0;
+        int size = this.queue.size();
+        int turnaroundTime = 0;
+        while(!this.queue.isEmpty()){
+            counter += this.queue.get(0).getCycles();
+            System.out.println("Process " + this.queue.get(0).getPID() + "finishes on cycle " + counter);
+            turnaroundTime += counter;
+            this.queue.remove(0);
+        }
+        System.out.printf("Average turnaround time: %.2f",turnaroundTime/(double)size);
 
     }
     public ProcessScheduler(){
