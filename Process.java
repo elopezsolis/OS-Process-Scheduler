@@ -1,7 +1,7 @@
 /**
  * This class will implement a process.
  */
-public class Process {
+public class Process implements Comparable{
     private int PID;
     private int cycles;
     public Process(){
@@ -33,5 +33,13 @@ public class Process {
     }
 
 
-
+    @Override
+    public int compareTo(Object o) {
+        if(this.cycles < ((Process)o).cycles)
+            return -1;
+        else if(this.cycles > ((Process)o).cycles )
+            return 1;
+        else
+        return 0;
+    }
 }
