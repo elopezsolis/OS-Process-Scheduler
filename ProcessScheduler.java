@@ -17,17 +17,25 @@ public class ProcessScheduler {
         System.out.println(queue.toString());
         ps.FCFS(queue);
         ps.SFS(queue);
+        ps.RRS(queue,50);
+        ps.RRS(queue,100);
     }
     
     public void printTAT(double turnArTi, int size){
-        System.out.printf("Average turnaround time: %.2f",turnArTi/(double)size);
+        System.out.printf("Average turnaround time: %.2f\n",turnArTi/(double)size);
     }
 
+    /**
+     * First Come First Serve. This method executes each process as they are queued in the List.
+     * @param list - Contains the processes to schedule.
+     */
     public void FCFS(ArrayList<Process> list){
         ArrayList<Process> temp = new ArrayList<>(list);
         int counter= 0;
         int size = temp.size();
         int turnaroundTime = 0;
+
+        System.out.println("Running First-Come, First-Served scheduler.");
         while(!temp.isEmpty()){
             counter += temp.get(0).getCycles();
             System.out.println("Process " + temp.get(0).getPID() + "finishes on cycle " + counter);
@@ -37,8 +45,7 @@ public class ProcessScheduler {
         this.printTAT(turnaroundTime,size);
     }
 
-    public ProcessScheduler(){
-    }
+    public ProcessScheduler(){}
 
     public ArrayList<Process> ReadFile(String fileName){
         ArrayList<Process> queue = new ArrayList<>();
@@ -53,14 +60,45 @@ public class ProcessScheduler {
     }
 
     /**
-     * Creates a copy of the passed queue and sorts it, then it calls First Come First Serve
-     * @param queue - queue of processes to schedule.
+     * Shortest First Scheduler
+     * Creates a copy of the passed List and sorts it, then it calls First Come First Serve
+     * @param queue - the List of processes to schedule.
      */
     public void SFS(ArrayList<Process> queue){
         ArrayList<Process> temp = new ArrayList<>(queue);
+        System.out.println("Running Shortest First Scheduler.");
         Collections.sort(temp);
-        System.out.println(temp.toString());
         this.FCFS(temp);
 
+    }
+    /**
+     * Round Robin Scheduler - Schedules each process only by the set quantum, it removes them from the front of the list
+     * and if they have any cycles left then it puts them at the back of the list.
+     * @param queue - list with all the processes
+     * @param quantum - set amount of cycles for the process to be schedule for.
+     */
+    public void RRS(ArrayList<Process> queue, int quantum){
+        ArrayList<Process> temp = new ArrayList<>(queue);
+        int size = temp.size();
+        int counter =0;
+        double total =0;
+
+        System.out.println("Running Round Robin with quantum " + quantum);
+        while(!temp.isEmpty()){
+            Process current = new Process(temp.get(0));
+            temp.remove(0);
+            if(current.getCycles() <= quantum) {
+                counter += current.getCycles();
+                current.setCycles(0);
+                System.out.println("Process " + current.getPID() + " finishes on cycle " + counter);
+                total += counter;
+            }
+            else {
+                current.setCycles(current.getCycles() - quantum);
+                counter += quantum;
+                temp.add(current);
+            }
+        }
+        this.printTAT(total,size);
     }
 }

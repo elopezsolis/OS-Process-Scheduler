@@ -8,6 +8,10 @@ public class Process implements Comparable{
         this.PID =0;
         this.cycles=0;
     }
+    public Process(Process temp){
+        this.PID = temp.PID;
+        this.cycles = temp.cycles;
+    }
     public Process(int newPid, int newCycles){
         this.PID = newPid;
         this.cycles = newCycles;
